@@ -89,7 +89,7 @@
 
 ::ng-deep .p-checkbox .p-checkbox-box {
     border: 1px solid #594859 !important;       
-    background: transparent;   
+    background: transparent !important;   
 }
 
 ::ng-deep .p-checkbox .p-checkbox-box:hover {

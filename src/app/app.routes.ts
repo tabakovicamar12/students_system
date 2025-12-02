@@ -7,6 +7,11 @@ export const routes: Routes = [
             import('./overview/overview/overview.component').then(m => m.OverviewComponent),
     },
     {
+        path: 'login',
+        loadComponent: () =>
+            import('./overview/login/login').then(m => m.LoginComponent),
+    },
+    {
         path: '',
         redirectTo: 'overview',
         pathMatch: 'full'

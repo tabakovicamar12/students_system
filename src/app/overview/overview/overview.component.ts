@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-overview',
+  standalone: true,
   imports: [StudentsComponent, MenuModule, BadgeModule, AvatarModule, RippleModule, ButtonModule, MenubarModule, InputTextModule, CommonModule],
   templateUrl: './overview.html',
   styleUrl: './overview.css',

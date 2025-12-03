@@ -18,12 +18,12 @@ export const routes: Routes = [
     },
     {
         path: '',
-        redirectTo: 'overview',
+        redirectTo: 'register',
         pathMatch: 'full'
     },
     {
         path: '**',
-        redirectTo: 'overview',
+        redirectTo: 'register',
         pathMatch: 'full'
     }
 ];

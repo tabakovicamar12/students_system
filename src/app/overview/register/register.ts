@@ -7,17 +7,23 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { FormsModule } from '@angular/forms';
 import { PasswordModule } from 'primeng/password';
+import { AuthService } from '../../../auth-service';
+import { Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-register',
   imports: [FormsModule,
     CardModule,
     InputGroupModule,
+    ToastModule,
     InputGroupAddonModule,
     FloatLabelModule,
     InputTextModule,
     ButtonModule,
     PasswordModule],
+  providers: [Router, MessageService],
   templateUrl: './register.html',
   styleUrl: './register.css',
 })
@@ -25,12 +31,33 @@ export class RegisterComponent {
   data: any = {};
   password_length = false;
   password_symbol = false;
-  username_length = false;
   email_check = false;
+
+  constructor(private authServ: AuthService, private router: Router, private messageServ: MessageService) { }
 
 
   onRegister() {
-    console.log(this.data);
+    if (this.data) {
+      this.authServ.register(this.data.email, this.data.password).then((data) => {
+        if (data) {
+          this.messageServ.add({
+            severity: 'success',
+            summary: 'Register Successful',
+            detail: 'Register Successful'
+          });
+
+          setTimeout(() => {
+            this.router.navigate(['/overview']);
+          }, 2000);
+        }
+      }).catch((err) => {
+        this.messageServ.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: err.message || 'Something went wrong!'
+        });
+      });
+    }
   }
 
   checkPassword() {
@@ -53,23 +80,9 @@ export class RegisterComponent {
     return false;
   }
 
-  checkUsername() {
-    if (this.data.username) {
-      if (this.data.username.length <= 0) {
-        this.username_length = false;
-      }
-      else {
-        this.username_length = true;
-      }
-    }
-    else {
-      this.username_length = false;
-    }
-  }
-
 
   checkInput() {
-    if (this.password_length === true && this.username_length === true && this.password_symbol === true && this.email_check === true) {
+    if (this.password_length === true && this.password_symbol === true && this.email_check === true) {
       return false;
     }
     else {

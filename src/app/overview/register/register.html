@@ -5,14 +5,6 @@
         <div class="auth-group">
             <p-inputgroup>
                 <p-inputgroup-addon>
-                    <i class="pi pi-user"></i>
-                </p-inputgroup-addon>
-                <p-floatlabel>
-                    <input pInputText id="over_label" [(ngModel)]="data.username" (ngModelChange)="checkUsername()" />
-                </p-floatlabel>
-            </p-inputgroup>
-            <p-inputgroup>
-                <p-inputgroup-addon>
                     <i class="pi pi-envelope"></i>
                 </p-inputgroup-addon>
                 <p-floatlabel>
@@ -41,11 +33,6 @@
                     character.</label></i>
             }
 
-            @if(username_length === false)
-            {
-            <i class="pi pi-times" style="color: red;"><label class="error-label">Username cannot be empty.</label></i>
-            }
-
             @if(email_check === false)
             {
             <i class="pi pi-times" style="color: red;"><label class="error-label">Invalid email.</label></i>
@@ -62,3 +49,6 @@
         </ng-template>
     </p-card>
 </div>
+
+<p-toast></p-toast>
+

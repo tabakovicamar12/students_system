@@ -11,6 +11,7 @@
 }
 
 ::ng-deep button.p-ripple.p-button.p-component.w-full {
+    margin-top: 10px;
     border: none;
     background-color: #7a5f7a;
     width: 100%;

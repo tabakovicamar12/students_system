@@ -7,20 +7,32 @@ import { environment } from './environments/environment';
 })
 export class AuthService {
   private supabase: SupabaseClient;
+  private url: string = "";
 
   constructor() {
     this.supabase = createClient(environment.supabaseUrl, environment.supabaseAnonKey);
+    this.url = environment.url;
   }
 
-  async register(email: string, password: string) {
-    const { data, error } = await this.supabase.auth.signUp({ email, password });
-    if (error) throw error;
-    return data;
+  async register(email: string, password: string, role: string = 'user') {
+    const response = await fetch(`${this.url}/register`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ email, password, role })
+    });
+    return response.json();
   }
 
   async login(email: string, password: string) {
-    const { data, error } = await this.supabase.auth.signInWithPassword({ email, password });
-    if (error) throw error;
-    return data;
+    const response = await fetch(`${this.url}/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ email, password })
+    });
+    return response.json();
   }
 }

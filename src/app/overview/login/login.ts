@@ -47,7 +47,6 @@ export class LoginComponent {
               summary: 'Login Successful',
               detail: 'Login Successful'
             });
-            console.log(data);
 
             setTimeout(() => {
               this.router.navigate(['/overview']);

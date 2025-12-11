@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Register } from './register';
+import { RegisterComponent } from './register';
 
 describe('Register', () => {
-  let component: Register;
-  let fixture: ComponentFixture<Register>;
+  let component: RegisterComponent;
+  let fixture: ComponentFixture<RegisterComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Register]
+      imports: [RegisterComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(Register);
+    fixture = TestBed.createComponent(RegisterComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
@@ -20,4 +20,20 @@ describe('Register', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('check pattern is false of password', () => {
+    component.data.password = 'Password1';
+
+    component.checkPassword();
+
+    expect(component.password_symbol).toBeFalsy();
+  })
+
+  it('check pattern is true of password', () => {
+    component.data.password = 'Password1@aaa';
+ 
+    component.checkPassword();
+
+    expect(component.password_symbol).toBeTruthy();
+  })
 });

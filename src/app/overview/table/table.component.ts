@@ -13,6 +13,7 @@ import { SelectModule } from 'primeng/select';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { FormsModule } from '@angular/forms';
 import { DataService } from '../../data-service';
+import { MessageModule } from 'primeng/message';
 
 @Component({
   selector: 'app-table',
@@ -23,6 +24,7 @@ import { DataService } from '../../data-service';
     TextareaModule,
     SelectModule,
     InputNumberModule,
+    MessageModule,
     FormsModule],
   providers: [MessageService, ConfirmationService],
   templateUrl: './table.html',
@@ -47,7 +49,7 @@ export class TableComponent {
   rows = 10;
 
   rowSelect: EventEmitter<any> = new EventEmitter<any>();
-editingCourseId: any;
+  editingCourseId: any;
 
   constructor(private messageService: MessageService, private confirmationService: ConfirmationService, private data_service: DataService) {
     this.get_courses();
@@ -160,22 +162,21 @@ editingCourseId: any;
 
 
   onRowEditInit(event: any) {
-    console.log(event);
     this.edit = true;
     this.editingCourseId = event.id;
   }
 
   onRowEditSave(event: any) {
-     var course = this.courses.find(c => c.id === event.id);  
+    var course = this.courses.find(c => c.id === event.id);
 
-     if(course) {
-       course.course_name = event.course_name;
-       course.professor = event.professor;
-       course.ects = event.ects;
+    if (course) {
+      course.course_name = event.course_name;
+      course.professor = event.professor;
+      course.ects = event.ects;
 
-       this.edit = false;
-     }
-     else {}
+      this.edit = false;
+    }
+    else { }
   }
 
   onRowEditCancel(event: any) {

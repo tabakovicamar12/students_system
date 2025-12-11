@@ -28,7 +28,7 @@ jobs:
         run: npm install @angular/cli@21 --save-dev --legacy-peer-deps
 
       - name: Run Angular tests with coverage
-        run: npx ng test --watch=false --code-coverage
+        run: ng test --coverage --watch=false
 
       - name: Upload coverage report
         uses: actions/upload-artifact@v4

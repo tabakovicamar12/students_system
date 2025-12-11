@@ -22,7 +22,7 @@ jobs:
         run: npm install --legacy-peer-deps
 
       - name: Install Angular CLI
-        run: npm install @angular/cli@21 --save-dev
+        run: npm install @angular/cli@21 --save-dev --legacy-peer-deps
 
       - name: Run Angular tests
         run: npx ng test --watch=false

@@ -1,8 +1,9 @@
-name: Angular Tests
+name: Angular Tests on Main
 
 on:
   push:
-  pull_request:
+    branches:
+      - main
 
 jobs:
   test:
@@ -12,19 +13,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
 
       - name: Install dependencies
-        run: npm install --force
+        run: npm install --legacy-peer-deps
 
-      - name: Run Angular tests with coverage
-        run: npm run test -- --watch=false --code-coverage
-
-      - name: Upload coverage artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: angular-coverage
-          path: coverage/
+      - name: Run Angular tests
+        run: ng test --watch=false

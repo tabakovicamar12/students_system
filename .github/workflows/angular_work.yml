@@ -1,7 +1,10 @@
-name: Angular Tests on Main
+name: Angular Frontend Tests
 
 on:
   push:
+    branches:
+      - main
+  pull_request:
     branches:
       - main
 
@@ -24,6 +27,13 @@ jobs:
       - name: Install Angular CLI
         run: npm install @angular/cli@21 --save-dev --legacy-peer-deps
 
-      - name: Run Angular tests
-        run: npx ng test --watch=false
+      - name: Run Angular tests with coverage
+        run: npx ng test --watch=false --code-coverage
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v3
+        with:
+          name: frontend-coverage
+          path: coverage/
+
 

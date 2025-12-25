@@ -16,7 +16,7 @@ describe('DataService', () => {
 
   it('should return all students', () => {
     const students = service.getStudents();
-    expect(students.length).toBe(2);
+    expect(students.length).toBe(3);
     expect(students[0].firstName).toBe('John');
   });
 
@@ -25,14 +25,14 @@ describe('DataService', () => {
     const student = { id: '3', first_name: 'Alice', last_name: "Smith", email: "", ects: 3, courses: [] };
     service.addStudent(student);
 
-    expect(students.length).toBe(3);
+    expect(students.length).toBe(4);
   });
 
   it('should delete a student', () => {
     service.deleteStudent(1);
     const students = service.getStudents();
 
-    expect(students.length).toBe(1);
+    expect(students.length).toBe(2);
     expect(students.find(s => s.id === 1)).toBeUndefined();
   });
 

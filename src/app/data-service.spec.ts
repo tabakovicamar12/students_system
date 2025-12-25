@@ -17,7 +17,7 @@ describe('DataService', () => {
   it('should return all students', () => {
     const students = service.getStudents();
     expect(students.length).toBe(3);
-    expect(students[0].firstName).toBe('John');
+    expect(students[0].firstName).toBe('Amar');
   });
 
   it('should return add student', () => {

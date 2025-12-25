@@ -35,12 +35,13 @@ export class TableComponent {
   @Input() columns: any[] = [];
   @Input() expendableColumns: any[] = [];
   @Input() id: string = '';
+  employee: any  = {};
   expandedRows: { [key: string]: any } = {};
   productDialog: boolean = false;
   submitted: boolean = false;
   student: any = {};
   data_add: any = {};
-  selectedStudents: any[] = [];
+  selectedEmployees: any[] = [];
   courses: any[] = [];
   clonedProducts: { [s: string]: any } = {};
   selectedCourses: any[] = [];
@@ -90,7 +91,7 @@ export class TableComponent {
     this.productDialog = true;
   }
 
-  deleteSelectedStudents() {
+  deleteSelectedEmployees() {
     this.confirmationService.confirm({
       message: 'Are you sure you want to delete the selected students?',
       header: 'Confirm',
@@ -105,13 +106,13 @@ export class TableComponent {
         label: 'Yes'
       },
       accept: () => {
-        if (this.selectedStudents) {
-          this.selectedStudents.forEach(student => {
+        if (this.selectedEmployees) {
+          this.selectedEmployees.forEach(student => {
             this.data_service.deleteStudent(student.id);
           });
         }
-        this.selectedStudents = [];
-        this.loadStudentsLazy(null);
+        this.selectedEmployees = [];
+        this.loadEmployeeLazy(null);
         this.messageService.add({
           severity: 'success',
           summary: 'Successful',
@@ -130,7 +131,7 @@ export class TableComponent {
     this.data_service.addStudent(this.data_add);
     this.hideDialog();
     this.selectedCourses = [];
-    this.loadStudentsLazy(null);
+    this.loadEmployeeLazy(null);
     console.log(this.data_add);
   }
 
@@ -138,7 +139,7 @@ export class TableComponent {
     const students = this.data_service.getStudents();
 
     if (students.length !== 0) {
-      const maxId = Math.max(...students.map(s => parseInt(s.id)));
+      const maxId = Math.max(...students.map(s => s.id));
 
       if (maxId) {
         return maxId + 1;
@@ -156,7 +157,7 @@ export class TableComponent {
     this.submitted = false;
   }
 
-  loadStudentsLazy(event: any) {
+  loadEmployeeLazy(event: any) {
     this.data = this.data_service.getStudents();
   }
 
@@ -172,7 +173,7 @@ export class TableComponent {
     if (course) {
       course.course_name = event.course_name;
       course.professor = event.professor;
-      course.ects = event.ects;
+      course.status = event.status;
 
       this.edit = false;
     }

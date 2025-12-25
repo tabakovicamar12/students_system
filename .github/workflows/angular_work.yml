@@ -91,12 +91,17 @@ jobs:
       - name: Install Vercel CLI
         run: npm install --global vercel
 
+      - name: Set Git Author to match Vercel
+        run: |
+          git config --global user.email "amartabakovic194@gmail.com"
+          git config --global user.name "Amar Tabakovic"
+
       - name: Pull Vercel Environment Information
-        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }} --scope amkecs-projects
 
       - name: Build Project Artifacts
-        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }} --scope amkecs-projects
 
       - name: Deploy Project Artifacts to Vercel
         run: |
-          vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }} --force --no-wait
+          vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }} --force --no-wait --scope amkecs-projects

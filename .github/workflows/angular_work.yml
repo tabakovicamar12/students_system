@@ -111,5 +111,4 @@ jobs:
           vercel deploy --prebuilt --prod \
             --token=${{ secrets.VERCEL_TOKEN }} \
             --scope amkecs-projects \
-            --allow-external-push-for-all-actors \
             --force --no-wait

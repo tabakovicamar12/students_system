@@ -86,29 +86,7 @@ jobs:
     needs: docker
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    env:
-      npm_config_legacy_peer_deps: true
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Install Vercel CLI
-        run: npm install --global vercel
-
-      - name: Set Git Author to match Vercel
+      - name: Trigger Render Deployment
         run: |
-          git config --global user.email "amartabakovic194@gmail.com"
-          git config --global user.name "amartabakovic194-6337"
-
-      - name: Pull Vercel Environment Information
-        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }} --scope amkecs-projects
-
-      - name: Build Project Artifacts
-        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }} --scope amkecs-projects
-
-      - name: Deploy Project Artifacts to Vercel
-        run: |
-          vercel deploy --prebuilt --prod \
-            --token=${{ secrets.VERCEL_TOKEN }} \
-            --scope amkecs-projects \
-            --force --no-wait
+          curl -f "${{ secrets.RENDER_DEPLOY_HOOK }}"

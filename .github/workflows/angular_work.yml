@@ -44,7 +44,7 @@ jobs:
         run: npm install @vitest/browser-playwright --save-dev --legacy-peer-deps
 
       - name: Run Angular tests
-        run: npx ng test --watch=false --code-coverage
+        run: npx ng test --watch=false --coverage
 
       - name: Build Angular App
         run: npx ng build --configuration=production
@@ -68,7 +68,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 
+          fetch-depth: 0
 
       - name: Download coverage report
         uses: actions/download-artifact@v4
@@ -112,7 +112,7 @@ jobs:
   docker-dev:
     needs: test-and-build
     runs-on: ubuntu-latest
-    environment: Development  
+    environment: Development
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
       - name: Checkout repository
@@ -164,4 +164,6 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
-      -
+      - name: Trigger Render Deployment
+        run: |
+          curl -f "${{ secrets.RENDER_DEPLOY_HOOK }}"

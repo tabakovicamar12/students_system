@@ -44,7 +44,7 @@ jobs:
         run: npm install @vitest/browser-playwright --save-dev --legacy-peer-deps
 
       - name: Run Angular tests
-        run: npx ng test --watch=false --code-coverage
+        run: npx ng test --watch=false --coverage
 
       - name: Build Angular App
         run: npx ng build --configuration=production

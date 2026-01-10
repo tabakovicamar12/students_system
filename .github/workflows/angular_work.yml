@@ -59,7 +59,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: frontend-coverage
-          path: .
+          path: coverage/
 
   sonarcloud:
     needs: test-and-build
@@ -85,7 +85,7 @@ jobs:
           args: >
             -Dsonar.projectKey=tabakovicamar12_students_system
             -Dsonar.organization=tabakovicamar12
-            -Dsonar.javascript.lcov.reportPaths=lcov.info
+            -Dsonar.javascript.lcov.reportPaths=**/lcov.info
 
       - name: SonarCloud Quality Gate Check
         uses: sonarsource/sonarqube-quality-gate-action@master

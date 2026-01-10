@@ -15,21 +15,27 @@ export class StudentsComponent {
     { field: 'id', header: '# ID' },
     { field: 'course_name', header: 'Course name' },
     { field: 'professor', header: 'Professor' },
-    { field: 'ects', header: 'ECTS' }
+    { field: 'status', header: 'STATUS' }
   ];
 
   columns = [
     { field: 'id', header: '# ID' },
-    { field: 'first_name', header: 'First name' },
-    { field: 'last_name', header: 'Last name' },
+    { field: 'firstName', header: 'First name' },
+    { field: 'lastName', header: 'Last name' },
     { field: 'email', header: 'Email' },
-    { field: 'ects', header: 'ECTS' }
+    { field: 'position', header: 'Position' },
+    { field: 'department', header: 'Department' },
+    { field: 'status', header: 'Status' },
+    { field: 'hireDate', header: 'Hire date' },
+    { field: 'updatedAt', header: 'Updated at' }
   ];
+
 
   constructor(private dataService: DataService) {
     this.data = this.dataService.getStudents();
     this.data.forEach(student => {
-      student.courses = this.dataService.getCourses(student.id);
+      //student.courses = this.dataService.getCourses(student.id);
+      student.courses = [];
     });
   }
 }

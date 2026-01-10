@@ -7,12 +7,16 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { FormsModule } from '@angular/forms';
 import { PasswordModule } from 'primeng/password';
-
+import { AuthService } from '../../../auth-service';
+import { Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [FormsModule,
+    ToastModule,
     CardModule,
     InputGroupModule,
     InputGroupAddonModule,
@@ -21,6 +25,7 @@ import { PasswordModule } from 'primeng/password';
     ButtonModule,
     PasswordModule
   ],
+  providers: [Router, MessageService],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
@@ -28,13 +33,36 @@ export class LoginComponent {
   checked1 = signal<boolean>(true);
   data: any = {};
   password_length = false;
-  password_username = false;
+  check_email = false;
 
-
+  constructor(private authServ: AuthService, private router: Router, private messageServ: MessageService) { }
 
   onLogin() {
-    console.log(this.data);
+    if (this.data) {
+      this.authServ.login(this.data.email, this.data.password)
+        .then((data) => {
+          if (data) {
+            this.messageServ.add({
+              severity: 'success',
+              summary: 'Login Successful',
+              detail: 'Login Successful'
+            });
+
+            setTimeout(() => {
+              this.router.navigate(['/overview']);
+            }, 2000);
+          }
+        })
+        .catch((err) => {
+          this.messageServ.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: err.message || 'Something went wrong!'
+          });
+        });
+    }
   }
+
 
   checkPassword() {
     if (this.data.password) {
@@ -45,35 +73,32 @@ export class LoginComponent {
         this.password_length = true;
       }
     }
-    else
-    {
+    else {
       this.password_length = false;
     }
   }
 
-  checkUsername() {
-    if (this.data.username) {
-      if (this.data.username.length <= 0) {
-        this.password_username = false;
+  checkEmail() {
+    if (this.data.email) {
+      if (this.data.email.length <= 0) {
+        this.check_email = false;
       }
       else {
-        this.password_username = true;
+        this.check_email = true;
       }
     }
-    else
-    {
-      this.password_username = false;
+    else {
+      this.check_email = false;
     }
   }
 
 
   checkInput() {
-    if (this.password_length === true && this.password_username === true) {
-      return true;
-    }
-    else
-    {
+    if (this.password_length === true && this.check_email === true) {
       return false;
+    }
+    else {
+      return true;
     }
   }
 }

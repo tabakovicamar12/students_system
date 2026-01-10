@@ -12,13 +12,23 @@ export const routes: Routes = [
             import('./overview/login/login').then(m => m.LoginComponent),
     },
     {
+        path: 'register',
+        loadComponent: () =>
+            import('./overview/register/register').then(m => m.RegisterComponent),
+    },
+    {
+        path: 'employee',
+        loadComponent: () =>
+            import('./overview/employee/employee').then(m => m.Employee),
+    },
+    {
         path: '',
-        redirectTo: 'overview',
+        redirectTo: 'register',
         pathMatch: 'full'
     },
     {
         path: '**',
-        redirectTo: 'overview',
+        redirectTo: 'register',
         pathMatch: 'full'
     }
 ];

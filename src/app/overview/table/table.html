@@ -2,16 +2,16 @@
 <p-toolbar class="mb-6 toolbar-custom">
     <ng-template #start>
         <p-button label="New" icon="pi pi-plus" class="mr-2 btn" (onClick)="openNew()" />
-        <p-button severity="danger" label="Delete" icon="pi pi-trash" outlined (onClick)="deleteSelectedStudents()"
-            [disabled]="!selectedStudents || !selectedStudents.length" />
+        <p-button severity="danger" label="Delete" icon="pi pi-trash" outlined (onClick)="deleteSelectedEmployees()"
+            [disabled]="!selectedEmployees || !selectedEmployees.length" />
     </ng-template>
 </p-toolbar>
 
 
-<p-table [columns]="columns" dataKey="id" class="table" [value]="data" sortField="ECTS" [sortOrder]="-1"
+<p-table [columns]="columns" dataKey="id" class="table" [value]="data" sortField="ID" [sortOrder]="-1"
     [tableStyle]="{ 'min-width': '50rem' }" [paginator]="true" [rows]="20" [first]="first"
-    [showCurrentPageReport]="true" [(selection)]="selectedStudents" [rowHover]="true" [lazy]="true"
-    (onLazyLoad)="loadStudentsLazy($event)"
+    [showCurrentPageReport]="true" [(selection)]="selectedEmployees" [rowHover]="false" [lazy]="true"
+    (onLazyLoad)="loadEmployeeLazy($event)"
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowsPerPageOptions]="[20]"
     (onPage)="pageChange($event)" editMode="row" [expandedRowKeys]="expandedRows">
     <ng-template #header>
@@ -19,36 +19,106 @@
             <th style="width: 3rem">
                 <p-tableHeaderCheckbox />
             </th>
-            <th></th>
             @for (item of columns; track $index) {
-            <th [pSortableColumn]="item.field">
-                <div class="flex items-center gap-2">
-                    {{ item.header }}
-                    <p-sortIcon [field]="item.header" class="icon-sort" />
-                </div>
-            </th>
+            @if($index !== columns.length - 1) {
+                <th [pSortableColumn]="item.field">
+                    <div class="flex items-center gap-2">
+                        {{ item.header }}
+                        <p-sortIcon [field]="item.header" class="icon-sort" />
+                    </div>
+                </th>
+                }
             }
+            <th></th>
         </tr>
     </ng-template>
 
-    <ng-template #body let-student let-expanded="expanded" let-data>
-        <tr class="content-table">
+    <ng-template #body let-editing="editing" let-data let-ri="rowIndex">
+        <tr [pEditableRow]="data" class="content-table">
             <td style="width: 3rem">
-                <p-tableCheckbox [value]="student" />
+                <p-tableCheckbox [value]="data" />
             </td>
             <td>
-                <p-button type="button" pRipple [pRowToggler]="student" [text]="true" severity="secondary"
-                    [rounded]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
+                <p-cellEditor>
+                    <ng-template #input>
+                        <input pInputText type="text" [(ngModel)]="data.id" />
+                    </ng-template>
+                    <ng-template #output>
+                        {{data.id}}
+                    </ng-template>
+                </p-cellEditor>
             </td>
-            <td>{{ data.id }}</td>
-            <td>{{ data.first_name }}</td>
-            <td>{{ data.last_name }}</td>
-            <td>{{ data.email }}</td>
-            <td>{{ data.ects }}</td>
+            <td>
+                <p-cellEditor>
+                    <ng-template #input>
+                        <input pInputText type="text" [(ngModel)]="data.firstName" />
+                    </ng-template>
+                    <ng-template #output>
+                        {{data.firstName}}
+                    </ng-template>
+                </p-cellEditor>
+            </td>
+            <td>
+                <p-cellEditor>
+                    <ng-template #input>
+                        <input pInputText type="text" [(ngModel)]="data.lastName" />
+                    </ng-template>
+                    <ng-template #output>
+                        {{data.lastName}}
+                    </ng-template>
+                </p-cellEditor>
+            </td>
+            <td>
+                <p-cellEditor>
+                    <ng-template #input>
+                        <input pInputText type="text" [(ngModel)]="data.email" />
+                    </ng-template>
+                    <ng-template #output>
+                        {{data.email}}
+                    </ng-template>
+                </p-cellEditor>
+            </td>
+            <td>
+                <p-cellEditor>
+                    <ng-template #input>
+                        <input pInputText type="text" [(ngModel)]="data.position" />
+                    </ng-template>
+                    <ng-template #output>
+                        {{data.position}}
+                    </ng-template>
+                </p-cellEditor>
+            </td>
+            <td>
+                <p-cellEditor>
+                    <ng-template #input>
+                        <input pInputText type="text" [(ngModel)]="data.department" />
+                    </ng-template>
+                    <ng-template #output>
+                        {{data.department}}
+                    </ng-template>
+                </p-cellEditor>
+            </td>
+            @if(data.status === 'Active') {
+            <td style="display: flex;justify-content: center;">&#128994;</td>
+            }
+            @else if(data.status === 'Inactive') {
+            <td style="display: flex;justify-content: center;">&#128308;</td>
+            }
+            <td>{{ data.hireDate | date:'medium' }}</td>
+            <td>
+                <div class="flex items-center justify-center gap-2">
+                    <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil"
+                        (click)="onRowEditInit(data)" text rounded severity="secondary"></button>
+                    <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow icon="pi pi-check"
+                        (click)="onRowEditSave(data)" text rounded severity="secondary"></button>
+                    <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow icon="pi pi-times"
+                        (click)="onRowEditCancel(data)" text rounded severity="secondary"></button>
+                </div>
+            </td>
         </tr>
     </ng-template>
 
-    <ng-template #expandedrow let-data>
+    <!--<ng-template #expandedrow let-data>
         <tr class="expand-row">
             <td colspan="7">
                 <div class="p-4">
@@ -66,9 +136,9 @@
             }
             <th style="width:12%"></th>
         </tr>
-    </ng-template>
+    </ng-template>-->
 
-    <ng-template #body let-course let-ri="rowIndex">
+    <!--<ng-template #body let-course let-ri="rowIndex">
         <tr [pEditableRow]="course">
             <td>{{ course.id }}</td>
             <td>
@@ -126,14 +196,14 @@
         <tr>
             <td colspan="6">There are no courses for this student yet.</td>
         </tr>
-    </ng-template>
+    </ng-template>-->
 </p-table>
-</div>
+<!--</div>
 </td>
 </tr>
 </ng-template>
 
-</p-table>
+</p-table>-->
 
 <p-dialog [(visible)]="productDialog" [style]="{ width: '450px' }" header="Student Details" [modal]="true">
     <ng-template #content>
@@ -206,5 +276,5 @@
 <p-confirmDialog [style]="{ width: '450px' }" />
 }
 @else {
-<p-button label="No data available" disabled="true"></p-button>
+<p-message severity="info" icon="pi pi-send" text="No data" styleClass="h-full" />
 }

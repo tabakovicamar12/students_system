@@ -13,6 +13,7 @@ import { SelectModule } from 'primeng/select';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { FormsModule } from '@angular/forms';
 import { DataService } from '../../data-service';
+import { MessageModule } from 'primeng/message';
 
 @Component({
   selector: 'app-table',
@@ -23,6 +24,7 @@ import { DataService } from '../../data-service';
     TextareaModule,
     SelectModule,
     InputNumberModule,
+    MessageModule,
     FormsModule],
   providers: [MessageService, ConfirmationService],
   templateUrl: './table.html',
@@ -33,12 +35,13 @@ export class TableComponent {
   @Input() columns: any[] = [];
   @Input() expendableColumns: any[] = [];
   @Input() id: string = '';
+  employee: any  = {};
   expandedRows: { [key: string]: any } = {};
   productDialog: boolean = false;
   submitted: boolean = false;
   student: any = {};
   data_add: any = {};
-  selectedStudents: any[] = [];
+  selectedEmployees: any[] = [];
   courses: any[] = [];
   clonedProducts: { [s: string]: any } = {};
   selectedCourses: any[] = [];
@@ -47,7 +50,7 @@ export class TableComponent {
   rows = 10;
 
   rowSelect: EventEmitter<any> = new EventEmitter<any>();
-editingCourseId: any;
+  editingCourseId: any;
 
   constructor(private messageService: MessageService, private confirmationService: ConfirmationService, private data_service: DataService) {
     this.get_courses();
@@ -88,7 +91,7 @@ editingCourseId: any;
     this.productDialog = true;
   }
 
-  deleteSelectedStudents() {
+  deleteSelectedEmployees() {
     this.confirmationService.confirm({
       message: 'Are you sure you want to delete the selected students?',
       header: 'Confirm',
@@ -103,13 +106,13 @@ editingCourseId: any;
         label: 'Yes'
       },
       accept: () => {
-        if (this.selectedStudents) {
-          this.selectedStudents.forEach(student => {
+        if (this.selectedEmployees) {
+          this.selectedEmployees.forEach(student => {
             this.data_service.deleteStudent(student.id);
           });
         }
-        this.selectedStudents = [];
-        this.loadStudentsLazy(null);
+        this.selectedEmployees = [];
+        this.loadEmployeeLazy(null);
         this.messageService.add({
           severity: 'success',
           summary: 'Successful',
@@ -128,7 +131,7 @@ editingCourseId: any;
     this.data_service.addStudent(this.data_add);
     this.hideDialog();
     this.selectedCourses = [];
-    this.loadStudentsLazy(null);
+    this.loadEmployeeLazy(null);
     console.log(this.data_add);
   }
 
@@ -136,7 +139,7 @@ editingCourseId: any;
     const students = this.data_service.getStudents();
 
     if (students.length !== 0) {
-      const maxId = Math.max(...students.map(s => parseInt(s.id)));
+      const maxId = Math.max(...students.map(s => s.id));
 
       if (maxId) {
         return maxId + 1;
@@ -154,28 +157,27 @@ editingCourseId: any;
     this.submitted = false;
   }
 
-  loadStudentsLazy(event: any) {
+  loadEmployeeLazy(event: any) {
     this.data = this.data_service.getStudents();
   }
 
 
   onRowEditInit(event: any) {
-    console.log(event);
     this.edit = true;
     this.editingCourseId = event.id;
   }
 
   onRowEditSave(event: any) {
-     var course = this.courses.find(c => c.id === event.id);  
+    var course = this.courses.find(c => c.id === event.id);
 
-     if(course) {
-       course.course_name = event.course_name;
-       course.professor = event.professor;
-       course.ects = event.ects;
+    if (course) {
+      course.course_name = event.course_name;
+      course.professor = event.professor;
+      course.status = event.status;
 
-       this.edit = false;
-     }
-     else {}
+      this.edit = false;
+    }
+    else { }
   }
 
   onRowEditCancel(event: any) {

@@ -1,4 +1,4 @@
-::ng-deep .login-card {
+::ng-deep .register-card {
     background: linear-gradient(135deg, #7a5f7a 0%, #9d7b9d 25%, #c499c4 75%, #e6d5e6 100%) !important;
     display: flex;
     justify-content: center;

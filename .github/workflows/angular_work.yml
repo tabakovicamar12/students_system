@@ -44,7 +44,7 @@ jobs:
         run: npm install @vitest/browser-playwright --save-dev --legacy-peer-deps
 
       - name: Run Angular tests
-        run: npx ng test --watch=false
+        run: npx ng test --watch=false --code-coverage
 
       - name: Build Angular App
         run: npx ng build --configuration=production
@@ -60,6 +60,38 @@ jobs:
         with:
           name: frontend-coverage
           path: coverage/
+
+  sonarcloud:
+    needs: test-and-build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 
+
+      - name: Download coverage report
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-coverage
+          path: coverage/
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.projectKey=tabakovicamar12_students_system
+            -Dsonar.organization=tabakovicamar12
+            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+
+      - name: SonarCloud Quality Gate Check
+        uses: sonarsource/sonarqube-quality-gate-action@master
+        timeout-minutes: 5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   deploy-pages:
     needs: test-and-build
@@ -103,7 +135,7 @@ jobs:
           tags: ${{ secrets.DOCKER_USERNAME }}/example-students:dev
 
   docker-prod:
-    needs: test-and-build
+    needs: [test-and-build, sonarcloud]
     runs-on: ubuntu-latest
     environment: Production
     if: github.event_name == 'push' && github.ref == 'refs/heads/production'
@@ -132,6 +164,4 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
-      - name: Trigger Render Deployment
-        run: |
-          curl -f "${{ secrets.RENDER_DEPLOY_HOOK }}"
+      -

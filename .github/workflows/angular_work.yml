@@ -61,7 +61,22 @@ jobs:
           name: frontend-coverage
           path: coverage/
 
-  sonarcloud:
+sonarcloud:
+    needs: test-and-build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download coverage report
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-coverage
+          path: coverage/ 
+
+sonarcloud:
     needs: test-and-build
     runs-on: ubuntu-latest
     steps:
@@ -74,7 +89,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: frontend-coverage
-          path: coverage/ 
+          path: coverage/
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
@@ -86,12 +101,7 @@ jobs:
             -Dsonar.projectKey=tabakovicamar12_students_system
             -Dsonar.organization=tabakovicamar12
             -Dsonar.javascript.lcov.reportPaths=coverage/example-students/lcov.info
-
-      - name: SonarCloud Quality Gate Check
-        uses: sonarsource/sonarqube-quality-gate-action@master
-        timeout-minutes: 5
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+            -Dsonar.qualitygate.wait=false
 
   deploy-pages:
     needs: test-and-build

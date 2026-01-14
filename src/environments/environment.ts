@@ -1,6 +1,4 @@
 export const environment = {
-  url: "",
-  production: false,
-  supabaseUrl: '',
-  supabaseAnonKey: ''
+  url: 'https://backend-service-latest-dj2i.onrender.com/authService',
+  production: true
 };

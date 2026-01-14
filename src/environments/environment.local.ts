@@ -1,4 +1,5 @@
 export const environment = {
-  url: 'http://localhost:3000/authService',
-  production: false
+  url: 'https://backend-service-latest-dj2i.onrender.com/authService',
+  //url: 'http://localhost:3000/authService',
+  production: true
 };
